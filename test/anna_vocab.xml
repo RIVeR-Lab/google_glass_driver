@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<vocab default="manual,high level">
+	<sub-vocab name="manual">
+		<phrase text="drive">
+			<modifier use="directions" required="true" >
+				<modifier use="speed" required="false" />
+			</modifier>
+		</phrase>
+
+		<phrase text="turn">
+			<modifier use="directions" required="true" >
+				<modifier use="speed" required="false" />
+			</modifier>
+		</phrase>
+	</sub-vocab>
+
+	<sub-vocab name="high level">
+		<phrase text="save location">
+			<modifier use= "destination" required="true" />
+		</phrase>
+
+		<phrase text="go to">
+			<modifier use="destination" required="true">
+				<modifier use="speed" required="false" />
+			</modifier>
+		</phrase>
+	</sub-vocab>
+
+	<sub-vocab name="destination">
+		<phrase text="kitchen" />
+		<phrase text="bathroom" />
+		<phrase text="bedroom" />
+		<phrase text="front door" />
+	</sub-vocab>
+
+	<sub-vocab name="directions">
+		<phrase text="forward"/>
+		<phrase text="backward"/>
+		<phrase text="left"/>
+		<phrase text="right"/>
+	</sub-vocab>
+
+	<sub-vocab name="speed">
+		<phrase text="slowly" />
+		<phrase text="quickly" />
+	</sub-vocab>
+</vocab>

@@ -1,0 +1,7 @@
+#This message file is used to send configuration data about a robot to Glass
+
+string name				#The name of the robot to be configured with Glass
+string info 			#Information describing the robot to be shown to the user
+string vocab			#A serialized XML describing the vocabulary of the robot
+---
+bool success			#True if configuration is succesful
