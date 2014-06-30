@@ -28,7 +28,7 @@ class GlassServer():
 		self._config_srv = rospy.Service("robot_configuration", RobotConfiguration, self.robotConfig)
 
 		#Subscribers
-		self._text_sub = rospy.Subscriber("/glass_server/text_message", TextMessage, self.textMessageCallback)
+		self._text_sub = rospy.Subscriber("/glass_server/text_messages", TextMessage, self.textMessageCallback)
 
 		#Publishers
 		self._voice_pub = rospy.Publisher("/recognizer/output", String)
@@ -67,13 +67,15 @@ class GlassServer():
 				elif data == "Confirm connection\n":
 					self.writeToGlass("Connection confirmed\n")
 				elif data == "configuration complete\n":
-					self._client_sock.send("Copy: %s\n" % data)
+				#	self._client_sock.send("Copy: %s\n" % data)
 					self._config_success = True
 				elif not data == "":
-					self._client_sock.send("Copy: %s\n" % data)
+				#	rospy.loginfo("Sending copy")
+				#	self._client_sock.send("Copy: %s" % data)
 					msg = String()
 					msg.data = data
 					self._voice_pub.publish(msg)
+					self.sendCommandToRobot(data)
 
 				if not self._send_queue == []:
 					rospy.loginfo("Sending queue: " + str(self._send_queue))
@@ -116,11 +118,27 @@ class GlassServer():
 
 		return True
 
+	def sendCommandToRobot(self, data):
+		splitData = data.split(":")
+		targetRobot = splitData[0]
+		command = splitData[1][1:]
+
+		publisher = self._robotDict[targetRobot]
+		msg = String()
+		msg.data = command
+		publisher.publish(msg)
+
 	def textMessageCallback(self, msg):
-		self.writeToGlass("text_message")
-		self.writeToGlass(msg.sender)
-		self.writeToGlass(msg.text)
-		self.writeToGlass(msg.priority)
+		rospy.loginfo("Recieved text message from " + msg.sender)
+		stringToSend = "text_message" + "_DELIM_" + msg.sender \
+											+ "_DELIM_" + msg.text \
+											+ "_DELIM_" + str(msg.priority) \
+											+ "_END"
+		self.writeToGlass(stringToSend)
+		#self.writeToGlass("text_message")
+		#self.writeToGlass(msg.sender)
+		#self.writeToGlass(msg.text)
+		#self.writeToGlass(msg.priority)
 
 	def imgMessageCallback(self, sender, msg):
 		self.writeToGlass("Image")
