@@ -79,6 +79,8 @@ class GlassServer():
                 elif data == "configuration complete\n":
                 #   self._client_sock.send("Copy: %s\n" % data)
                     self._config_success = True
+                elif data == "Delivery failed":
+                    pass
                 elif not data == "":
                 #   rospy.loginfo("Sending copy")
                 #   self._client_sock.send("Copy: %s" % data)
@@ -93,23 +95,23 @@ class GlassServer():
                     while not success:
                         try:
                             self._lock.acquire()
-                            rospy.loginfo("Grouping and iterating")
+
                             packetSize = 100
                             numPackets = len(self._send_queue) / packetSize + (1 if (len(self._send_queue) % packetSize > 0) else 0)
-                            for i in range(numPackets):
-                                start = i * packetSize
-                                end = start + packetSize
-                                send_string = self._send_queue[start:end]
 
-                                rospy.loginfo("Sending!")
-                                self._client_sock.send(send_string)
-                                if send_string[len(send_string) - 1] == " ":
-                                    self._client_sock.send("_SPACE_")
+                            rospy.loginfo("Setting up header")
+                            first_msg = "<msg>" + str(numPackets) + "_DELIM_" + str(packetSize) + "</msg>"
 
-                            #for string in self.grouper(self._send_queue, 1000):
-                            #    self._client_sock.send(string)
-                            #    if string[len(string) - 1] == " ":
-                            #        self._client_sock.send("_SPACE_")
+                            rospy.loginfo("Creating groups")
+                            groups = self.grouper(self._send_queue, packetSize)
+                            rospy.loginfo(groups)
+                            rospy.loginfo("Creating and sending packets")
+                            for i in range(len(groups)):
+                                rospy.loginfo("Sending")
+                                msg = "<pkt><index>" + str(i) + "</index>" + groups[i] + "</pkt>"
+                                self._client_sock.send("Test")
+                                rospy.loginfo("Sent " + str(i+1) + " packets!")
+
                             rospy.loginfo("Message sent")
                             self._lock.release()
                             self._send_queue = ""
@@ -141,8 +143,7 @@ class GlassServer():
         rospy.loginfo("Recieved configuration for " + msg.name)
         stringToSend = "robot_configuration" + "_DELIM_" + msg.name \
                                             + "_DELIM_" + msg.info \
-                                            + "_DELIM_" + msg.vocab \
-                                            + "_END"
+                                            + "_DELIM_" + msg.vocab
         self.writeToGlass(stringToSend)
         self._robotDict[msg.name] = rospy.Publisher("/" + msg.name.lower().replace(" ", "_") + "/voice_command", StringMsg)
         rospy.loginfo("Configuration written to Glass. Waiting for response")
@@ -167,8 +168,7 @@ class GlassServer():
         rospy.loginfo("Recieved text message from " + msg.sender)
         stringToSend = "text_message" + "_DELIM_" + msg.sender \
                                             + "_DELIM_" + msg.text \
-                                            + "_DELIM_" + str(msg.priority) \
-                                            + "_END"
+                                            + "_DELIM_" + str(msg.priority)
         self.writeToGlass(stringToSend)
 
     def ImageMessageCallback(self, msg):
@@ -195,12 +195,11 @@ class GlassServer():
         stringToSend = "image_message" + "_DELIM_" + msg.sender \
                                             + "_DELIM_" + msg.text \
                                             + "_DELIM_" + msg.base64_image \
-                                            + "_DELIM_" + str(msg.priority) \
-                                            + "_END"
+                                            + "_DELIM_" + str(msg.priority)
         self.writeToGlass(stringToSend)
 
     def grouper(self, seq, size):
-        return (seq[pos:pos + size] for pos in xrange(0, len(seq), size))
+        return [seq[pos:pos + size] for pos in range(0, len(seq), size)]
 
 
 if __name__ == '__main__':
