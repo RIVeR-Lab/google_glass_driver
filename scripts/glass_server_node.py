@@ -10,7 +10,7 @@ from glass_server.msg import TextMessage
 from glass_server.msg import ImageMessage
 from PIL import Image
 import cStringIO as StringIO
-from threading import Lock
+from threading import Lock, Event
 import itertools
 import logging
 
@@ -33,6 +33,7 @@ class GlassServer():
         self._robotDict = {}
 
         self._lock = Lock()
+        self._talkback_event = Event()
 
         self._config_srv = rospy.Service("robot_configuration", RobotConfiguration, self.robotConfig)
 
@@ -75,12 +76,16 @@ class GlassServer():
                 if data == "end connection\n": 
                     break
                 elif data == "Confirm connection\n":
+                    self._lock.acquire()
                     self._client_sock.send("Connection confirmed\n")
+                    self._lock.release()
                 elif data == "configuration complete\n":
                 #   self._client_sock.send("Copy: %s\n" % data)
                     self._config_success = True
                 elif data == "Delivery failed":
                     pass
+                elif data == "_NEXT_\n":
+                    self._talkback_event.set()
                 elif not data == "":
                 #   rospy.loginfo("Sending copy")
                 #   self._client_sock.send("Copy: %s" % data)
@@ -88,37 +93,6 @@ class GlassServer():
                     msg.data = data
                     self._voice_pub.publish(msg)
                     self.sendCommandToRobot(data)
-
-                if not self._send_queue == "":
-                    rospy.loginfo("Sending queue: " + self._send_queue)
-                    success = False
-                    while not success:
-                        try:
-                            self._lock.acquire()
-
-                            packetSize = 100
-                            numPackets = len(self._send_queue) / packetSize + (1 if (len(self._send_queue) % packetSize > 0) else 0)
-
-                            rospy.loginfo("Setting up header")
-                            first_msg = "<msg>" + str(numPackets) + "_DELIM_" + str(packetSize) + "</msg>"
-
-                            rospy.loginfo("Creating groups")
-                            groups = self.grouper(self._send_queue, packetSize)
-                            rospy.loginfo(groups)
-                            rospy.loginfo("Creating and sending packets")
-                            for i in range(len(groups)):
-                                rospy.loginfo("Sending")
-                                msg = "<pkt><index>" + str(i) + "</index>" + groups[i] + "</pkt>"
-                                self._client_sock.send("Test")
-                                rospy.loginfo("Sent " + str(i+1) + " packets!")
-
-                            rospy.loginfo("Message sent")
-                            self._lock.release()
-                            self._send_queue = ""
-                            success = True
-                        except Exception, ex:# OSError:
-                            logging.exception("Error on send!")
-            #        self._lock = False
                     
 
             rospy.loginfo("Disconnecting")
@@ -132,12 +106,43 @@ class GlassServer():
 
 
     def writeToGlass(self, string_data):
-        self._lock.acquire()
-        #rospy.loginfo("Adding " + string_data + " to queue " + self._send_queue)
-        self._send_queue += string_data
-        self._lock.release()
-        #self._lock = False
-        #self._client_sock.send(StringMsg_data)
+        rospy.loginfo("Sending: " + string_data)
+        success = False
+        try:
+            self._lock.acquire()
+            #headerSize = 30 #bytes
+            packetSize = 10000 #bytes
+            numPackets = len(string_data) / packetSize + (1 if (len(string_data) % packetSize > 0) else 0)
+
+            rospy.loginfo("Setting up header")
+            first_msg = "<msg>" + str(numPackets) + "_DELIM_" + str(packetSize) + "</msg>"
+            #slack = headerSize - len(first_msg)
+            #first_msg += " " * slack
+            rospy.loginfo("Sending header")
+            self._client_sock.send(first_msg)
+
+            rospy.loginfo("Creating groups")
+            groups = self.grouper(string_data, packetSize)
+            rospy.loginfo(groups)
+            rospy.loginfo("Creating and sending packets")
+            for i in range(len(groups)):
+                msg = "<pkt><index>" + str(i+1) + "</index>" + groups[i] + "</pkt>"
+                pkt_slack = packetSize - len(msg)
+                msg += " " * pkt_slack
+                rospy.loginfo("Sending")
+                self._client_sock.send(msg)
+                rospy.loginfo("Sent " + str(i+1) + " packets! Size=" + str(len(msg)))
+                self._talkback_event.wait()
+                self._talkback_event.clear()
+
+            rospy.loginfo("Message sent")
+            success = True
+        except Exception, ex:# OSError:
+            logging.exception("Error on send!")
+            rospy.loginfo("Error on send!")
+        finally:
+            rospy.loginfo("Releasing write lock")
+            self._lock.release()
 
     def robotConfig(self, msg):
         rospy.loginfo("Recieved configuration for " + msg.name)
