@@ -67,32 +67,33 @@ class GlassServer():
             while not rospy.is_shutdown():
                 data = ""
 
-                ready = select.select([self._client_sock], [], [], 0.2)
-                if ready[0]:
-                    data = self._client_sock.recv(1024)
+                #ready = select.select([self._client_sock], [], [], 0)
+                #if ready[0]:
+                data = self._client_sock.recv(1024)
+
                 if len(data) > 0:
                     rospy.loginfo("received: \"%s\"" % data)
 
-                if data == "end connection\n": 
-                    break
-                elif data == "Confirm connection\n":
-                    self._lock.acquire()
-                    self._client_sock.send("Connection confirmed\n")
-                    self._lock.release()
-                elif data == "configuration complete\n":
-                #   self._client_sock.send("Copy: %s\n" % data)
-                    self._config_success = True
-                elif data == "Delivery failed":
-                    pass
-                elif data == "_NEXT_\n":
-                    self._talkback_event.set()
-                elif not data == "":
-                #   rospy.loginfo("Sending copy")
-                #   self._client_sock.send("Copy: %s" % data)
-                    msg = StringMsg()
-                    msg.data = data
-                    self._voice_pub.publish(msg)
-                    self.sendCommandToRobot(data)
+                    if data == "end connection\n": 
+                        break
+                    elif data == "Confirm connection\n":
+                        self._lock.acquire()
+                        self._client_sock.send("Connection confirmed\n")
+                        self._lock.release()
+                    elif data == "configuration complete\n":
+                    #   self._client_sock.send("Copy: %s\n" % data)
+                        self._config_success = True
+                    elif data == "Delivery failed":
+                        pass
+                    elif data == "_NEXT_\n":
+                        self._talkback_event.set()
+                    elif not data == "":
+                    #   rospy.loginfo("Sending copy")
+                    #   self._client_sock.send("Copy: %s" % data)
+                        msg = StringMsg()
+                        msg.data = data
+                        self._voice_pub.publish(msg)
+                        self.sendCommandToRobot(data)
                     
 
             rospy.loginfo("Disconnecting")
@@ -157,6 +158,7 @@ class GlassServer():
             pass
         self._config_success = False
 
+        rospy.loginfo("Sending service response")
         return True
 
     def sendCommandToRobot(self, data):

@@ -24,7 +24,7 @@ class PseudoOryx:
             name = "Oryx"
             info = "Planetary exploration mobility platform equiped with three cameras and a scoop"
             this_dir = os.path.dirname(__file__)
-            filename = os.path.join(this_dir, 'oryx_vocab.xml')
+            filename = os.path.join(this_dir, 'oryx_vocab2.xml')
             vocab_file = open(filename, "r")
             vocab = vocab_file.read()
             rospy.loginfo("Sending configuration")
