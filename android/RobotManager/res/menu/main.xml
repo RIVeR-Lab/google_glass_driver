@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/viewDevices"
+        android:title="@string/view_devices"/>
+    
+    <item
+        android:id="@+id/viewMessages"
+        android:title="@string/view_messages"/>
+            
+    <item 
+        android:id="@+id/viewRobots"
+        android:title="@string/view_robots"/>
+    
+    <item 
+        android:id="@+id/close"
+        android:title="@string/close"/>
+        
+</menu>

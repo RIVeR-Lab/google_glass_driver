@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Robot Manager</string>
+    <string name="available_devices_label">Available Device List</string>
+    <string name="view_robots_label">View Robot List</string>
+    <string name="view_messages_label">View Message List</string>
+    <string name="glass_voice_trigger">manage robots</string>
+    <string name="view_devices">View Devices</string>
+    <string name="view_robots">View Robots</string>
+    <string name="view_messages">View Messages</string>
+    <string name="close">Close</string>
+    <string name="connect">Connect</string>
+    <string name="not_connected">Not Connected</string>
+    <string name="connected">Connected</string>
+    <string name="init_command">Command: None</string>
+    <string name="message_placeholder">Message from Robot</string>
+    <string name="message_txt_placeholder">Message text goes here</string>
+    <string name="timestamp_txt_placeholder">Received:</string>
+    <string name="focus_all">Focus: All</string>
+    <string name="next">Next \u21D2</string>
+    <string name="no_next">Next \u21CF</string>
+    <string name="previous">\u21D0 Previous</string>
+    <string name="no_previous">\u21CD Previous</string>
+    <string name="msg_counter">0 of 0</string>
+    <string name="view_image">View Image</string>
+    <string name="view_text">View Text</string>
+    <string name="message_string">\u2709\t0\tNew: 0</string>
+    
+    
+</resources>

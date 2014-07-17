@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="240px"
+        android:layout_height="360px"
+        android:background="@color/dark_grey"
+        android:scaleType="centerInside"
+        android:src="@drawable/not_connected_cross" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:text="Robot Manager"
+        android:textSize="24sp"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40px"
+        android:layout_marginTop="40px"
+        android:layout_marginLeft="20px" />
+    
+    <TextView
+        android:id="@+id/messageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/title"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="40px"
+        android:layout_marginTop="20px"
+        android:layout_toRightOf="@+id/imageView"
+        android:text="@string/message_string"
+        android:textColor="@color/yellow"
+        android:textSize="24sp" />
+    
+    <TextView
+        android:id="@+id/focusView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/messageView"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="40px"
+        android:layout_marginTop="20px"
+        android:layout_toRightOf="@+id/imageView"
+        android:text="@string/focus_all"
+        android:textColor="@color/blue"
+        android:textSize="24sp" />
+    
+     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/commandView"
+        android:textSize="24sp"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_below="@+id/focusView"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20px"
+        android:layout_marginRight="40px"
+        android:layout_marginLeft="20px"
+        android:textColor="@color/red"
+        android:text="@string/init_command"/>
+		
+</RelativeLayout>

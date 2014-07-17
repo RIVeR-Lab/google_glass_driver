@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/headline"
+        android:text="@string/message_placeholder"
+        android:textSize="24sp"
+        android:layout_marginTop="40px"
+        android:layout_marginLeft="40dip"
+		android:layout_marginRight="40dip" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/messageText"
+        android:textSize="24sp"
+        android:layout_below="@id/headline"
+        android:layout_marginTop="20px"
+        android:layout_marginLeft="40dip"
+		android:layout_marginRight="40dip"
+        android:textColor="@color/blue"
+        android:text="@string/message_txt_placeholder"/>
+    
+    <TextView
+        android:id="@+id/nextMsgText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:layout_marginLeft="40dip"
+		android:layout_marginRight="40dip"
+        android:text="@string/no_next"
+        android:textSize="22sp" />
+    
+    <TextView
+        android:id="@+id/msgCounterText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginLeft="40dip"
+		android:layout_marginRight="40dip"
+        android:text="@string/msg_counter"
+        android:textSize="22sp" />
+
+    <ImageView
+        android:id="@+id/testImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/messageText"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="36dp"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/timestampText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/nextMsgText"
+        android:layout_alignLeft="@+id/nextMsgText"
+        android:layout_marginBottom="11dp"
+        android:gravity="bottom"
+        android:text="@string/timestamp_txt_placeholder"
+        android:textColor="@color/green"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/msgPreviousText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:text="@string/no_previous"
+        android:textSize="22sp" />
+		
+</RelativeLayout>
