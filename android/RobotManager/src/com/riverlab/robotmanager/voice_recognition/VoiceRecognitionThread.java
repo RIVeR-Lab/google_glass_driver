@@ -70,7 +70,8 @@ public class VoiceRecognitionThread extends HandlerThread
 	public static final int LISTENING_MESSAGE = 6;
 	public static final int CONTEXT_MESSAGE = 7;
 	public static final int CONNECTION_MESSAGE = 8;
-	public static final int SHUTDOWN_MESSAGE = 9;
+	public static final int UPDATE_MESSAGE = 9;
+	public static final int SHUTDOWN_MESSAGE = 10;
 
 	//Handlers
 	private Handler mainHandler;
@@ -201,6 +202,10 @@ public class VoiceRecognitionThread extends HandlerThread
 						useSystemCommands(false);
 						changeVocab(mConnectCommands);
 					}
+					break;
+					
+				case UPDATE_MESSAGE:
+					update();
 					break;
 					
 				case SHUTDOWN_MESSAGE:
@@ -393,6 +398,19 @@ public class VoiceRecognitionThread extends HandlerThread
 	public void useSystemCommands(boolean use)
 	{
 		usingSystemCommands = use;
+	}
+	
+	/*
+	 * This function updates the vocabulary when a new robot is added.
+	 * If a command is already in progress, no update is done as the update
+	 * will occur once the command is finished.
+	 */
+	private void update()
+	{
+		if (mHelper == null)
+		{
+			changeVocab(getDefaultRobotCommands());
+		}
 	}
 
 	/*

@@ -96,11 +96,13 @@ public class RobotManagerApplication extends Application
 
 	public void addRobot(Robot newRobot)
 	{
-		Log.i("Application", "In addRobot");
 		mRobotMap.put(newRobot.getName(), newRobot);
 
 		Message msg = mVoiceThreadHandler.obtainMessage(VoiceRecognitionThread.ADD_VOCAB_MESSAGE, newRobot.getName());
 		mVoiceThreadHandler.sendMessageAtFrontOfQueue(msg);
+		
+		msg = mVoiceThreadHandler.obtainMessage(VoiceRecognitionThread.UPDATE_MESSAGE);
+		mVoiceThreadHandler.sendMessage(msg);
 
 		Log.i("Application", "Finished addRobot");
 	}

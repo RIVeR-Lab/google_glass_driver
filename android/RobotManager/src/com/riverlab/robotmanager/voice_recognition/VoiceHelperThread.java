@@ -73,7 +73,6 @@ public class VoiceHelperThread extends HandlerThread
 	{
 		ArrayList<String> previous = new ArrayList<String>();
 		ArrayList<Robot> allRobots = new ArrayList<Robot>(mApplication.getRobots());
-		boolean isRequired = false;
 
 		Robot targetRobot = mApplication.getRobot(targetRobotName);
 
@@ -84,6 +83,7 @@ public class VoiceHelperThread extends HandlerThread
 			while (!reset)
 			{
 				ArrayList<String> nextPhrases = new ArrayList<String>();
+				boolean isRequired = false;
 
 				if (newPhraseReceived)
 				{

@@ -168,10 +168,16 @@ class GlassServer():
         targetRobot = splitData[0]
         command = splitData[1][1:]
 
-        publisher = self._robotDict[targetRobot]
-        msg = StringMsg()
-        msg.data = command
-        publisher.publish(msg)
+        if targetRobot == "All":
+            for (robot_name, publisher) in self._robotDict.iteritems():
+                msg = StringMsg()
+                msg.data = command
+                publisher.publish(msg)
+        else:
+            publisher = self._robotDict[targetRobot]
+            msg = StringMsg()
+            msg.data = command
+            publisher.publish(msg)
 
     def textMessageCallback(self, msg):
         rospy.loginfo("Recieved text message from " + msg.sender)
