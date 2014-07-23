@@ -2,6 +2,9 @@
 
 <vocab default="manual,high level">
 	<sub-vocab name="manual">
+
+		<phrase text="stop"/>
+
 		<phrase text="drive">
 			<modifier use="directions" required="true" >
 				<modifier use="speed" required="false" />

@@ -28,7 +28,7 @@ public class RobotManagerApplication extends Application
 	private HashMap<String, Robot> mRobotMap = new HashMap<String, Robot>();
 	private boolean isConnected;
 	private Robot robotInFocus;
-	private ArrayList<RobotMessage> msgs = new ArrayList<RobotMessage>();
+	private ArrayList<RobotMessage> mMessages = new ArrayList<RobotMessage>();
 	private MessageListActivity msgListActivity = null;
 
 	public Handler getMainActivityHandler()
@@ -132,7 +132,7 @@ public class RobotManagerApplication extends Application
 
 	public void addMessage(RobotMessage newMsg)
 	{
-		msgs.add(newMsg);
+		mMessages.add(newMsg);
 		if (msgListActivity != null)
 		{
 			Runnable task = new Runnable() {
@@ -153,11 +153,14 @@ public class RobotManagerApplication extends Application
 
 	public ArrayList<RobotMessage> getMessages()
 	{
-		return msgs;
+		return mMessages;
 	}
 
 	public void onShutdown()
 	{
+		mRobotMap = null;
+		mMessages = null;
+		
 		Message msgMain = mMainThreadHandler.obtainMessage();
 		msgMain.what = MainActivity.SHUTDOWN_MESSAGE;
 		mMainThreadHandler.sendMessageAtFrontOfQueue(msgMain);

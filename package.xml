@@ -2,7 +2,7 @@
 <package>
   <name>google_glass_driver</name>
   <version>0.0.0</version>
-  <description>Driver software for Google Glass running the RobotManager application</description>
+  <description>Driver software for Google Glass running the RobotManager application.  This software was created by Worcester Polytechnic Institute's Robotics and Intelligent Vehicles Research Laboratory (RIVeR Lab)</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->

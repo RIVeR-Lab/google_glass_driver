@@ -536,6 +536,15 @@ public class VoiceRecognitionThread extends HandlerThread
 					{
 						//NOT YET IMPLEMENTED
 					}
+					
+					else if (recognizedStr.equals("Cancel"))
+					{
+						mHelper.interrupt();
+						mHelper = null;
+						changeVocab(getDefaultRobotCommands());
+						Message mainMsg = mainHandler.obtainMessage(MainActivity.COMMAND_MESSAGE, "Cancel");
+						mainHandler.sendMessage(mainMsg);
+					} 
 
 					else if (mActionMap != null && mActionMap.containsKey(recognizedStr))
 					{
@@ -562,6 +571,7 @@ public class VoiceRecognitionThread extends HandlerThread
 							mHelper.start();
 							while(!mHelper.isReady());
 							mHelperHandler = mHelper.getHandler();
+							//addToVocab("Cancel");
 
 							usingSystemCommands = false;
 						}

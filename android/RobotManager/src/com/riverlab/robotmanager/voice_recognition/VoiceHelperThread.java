@@ -129,6 +129,11 @@ public class VoiceHelperThread extends HandlerThread
 						isRequired = msg.isRequired;
 						reset = msg.reset;
 					}
+					//If a command is not finished, add cancel to interrupt command
+					if (!reset)
+					{
+						nextPhrases.add("Cancel");
+					}
 					sendNewVocabMessage(nextPhrases);
 
 					if (reset)

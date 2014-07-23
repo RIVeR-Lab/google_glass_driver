@@ -35,8 +35,6 @@ class GlassServer():
         self._lock = Lock()
         self._talkback_event = Event()
 
-        self._config_srv = rospy.Service("robot_configuration", RobotConfiguration, self.robotConfig)
-
         #Subscribers
         self._text_sub = rospy.Subscriber("/glass_server/text_messages", TextMessage, self.textMessageCallback)
         self._image_sub = rospy.Subscriber("/glass_server/image_messages", ImageMessage, self.ImageMessageCallback)
@@ -64,6 +62,9 @@ class GlassServer():
         rospy.loginfo("Accepted connection from "  + str(self._client_info))
 
         try:
+            #Make configuration service visible
+            self._config_srv = rospy.Service("robot_configuration", RobotConfiguration, self.robotConfig)
+
             while not rospy.is_shutdown():
                 data = ""
 
@@ -95,7 +96,8 @@ class GlassServer():
                         self._voice_pub.publish(msg)
                         self.sendCommandToRobot(data)
                     
-
+            #End the configuration service and close the connection
+            self._config_srv = None
             rospy.loginfo("Disconnecting")
             self._client_sock.close()
             self._server_sock.close()
